@@ -57,11 +57,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EditorOverwatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="plugin.cfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wayfarer\Wayfarer.csproj">
+      <Project>{26b559b2-1c9f-42d1-81a6-6e42a700f234}</Project>
+      <Name>Wayfarer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

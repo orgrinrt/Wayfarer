@@ -1,17 +1,28 @@
 ﻿#if TOOLS
 
 using Godot;
+using Wayfarer.Core.Plugin;
 using Wayfarer.Utils.Debug;
 using Wayfarer.Utils.Helpers;
 
-namespace Wayfarer.Core.Plugin
+namespace Wayfarer.Overwatch
 {
     [Tool]
     public class EditorOverwatch : EditorPlugin
     {
         public EditorInterface EditorInterface => GetEditorInterface();
         
-        public override bool Build()
+        public override void _EnterTree()
+        {
+            
+        }
+
+        public override void _ExitTree()
+        {
+            
+        }
+
+        public override bool Build() // NOT WORKING CURRENTLY, this does nothing
         {
             if (!EditorInterface.IsPluginEnabled("Wayfarer"))
             {
@@ -22,7 +33,7 @@ namespace Wayfarer.Core.Plugin
             return base.Build();
         }
         
-        private void RemoveOldEditorMenubar()
+        private void RemoveOldEditorMenubar() // consider somehow getting reference to Wayfarer Plugin.cs and the method there
         {
             Node[] editorNodes = EditorInterface.GetBaseControl().GetChildrenRecursive();
 
@@ -38,8 +49,6 @@ namespace Wayfarer.Core.Plugin
             }
         }
     }
-    
-    
 }
 
 #endif
