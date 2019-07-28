@@ -23,14 +23,31 @@ namespace Wayfarer.Overwatch
 
         public override void _ExitTree()
         {
-            RemoveCustomControlsFromEditor();
+            try
+            {
+                RemoveCustomControlsFromEditor();
+            }
+            catch (Exception e)
+            {
+                Log.Editor("Tried to remove Overwatch's Custom Controls, but couldn't", e, true);
+            }
         }
 
         public override void DisablePlugin()
         {
             base.DisablePlugin();
 
-            RemoveOldTopRightPanel();
+            Log.Editor("Disabling EditorOverwatch", true);
+            
+            //RemoveOldTopRightPanel();
+        }
+
+        public override void EnablePlugin()
+        {
+            base.EnablePlugin();
+            
+            Log.Editor("Enabling EditorOverwatch", true);
+            
         }
 
         private void AddCustomControlsToEditor()
@@ -78,10 +95,7 @@ namespace Wayfarer.Overwatch
             }
             catch (Exception e)
             {
-                
-                
                 Log.Editor(e.Message, true);
-                
             }
             
         }
