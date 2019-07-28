@@ -1,5 +1,6 @@
 ﻿#if TOOLS
 
+using System;
 using Godot;
 using Wayfarer.Core.Plugin;
 using Wayfarer.Utils.Debug;
@@ -12,41 +13,84 @@ namespace Wayfarer.Overwatch
     {
         public EditorInterface EditorInterface => GetEditorInterface();
         
+        private TopRightPanel _topRightPanel;
+        
         public override void _EnterTree()
         {
-            
+            Log.Instantiate();
+            AddCustomControlsToEditor();
         }
 
         public override void _ExitTree()
         {
-            
+            RemoveCustomControlsFromEditor();
         }
 
-        public override bool Build() // NOT WORKING CURRENTLY, this does nothing
+        public override void DisablePlugin()
         {
-            if (!EditorInterface.IsPluginEnabled("Wayfarer"))
-            {
-                Log.Editor("Solution was built, so removing the old EditorMenuBar...", true);
-                RemoveOldEditorMenubar();
-            }
-            
-            return base.Build();
-        }
-        
-        private void RemoveOldEditorMenubar() // consider somehow getting reference to Wayfarer Plugin.cs and the method there
-        {
-            Node[] editorNodes = EditorInterface.GetBaseControl().GetChildrenRecursive();
+            base.DisablePlugin();
 
-            foreach (Node node in editorNodes)
+            RemoveOldTopRightPanel();
+        }
+
+        private void AddCustomControlsToEditor()
+        {
+            //RemoveOldTopRightPanel();
+
+            PackedScene topRightScene = GD.Load<PackedScene>("res://Addons/Wayfarer/Assets/Scenes/Controls/TopRightPanel.tscn");
+            _topRightPanel = (TopRightPanel) topRightScene.Instance();
+            _topRightPanel.SetPluginManager(this);
+            AddControlToContainer(CustomControlContainer.Toolbar, _topRightPanel);
+
+        }
+
+        private void RemoveOldTopRightPanel()
+        {
+            try
             {
-                if (node is EditorMenuBar)
+                Node[] editorNodes = EditorInterface.GetBaseControl().GetChildrenRecursive();
+
+                foreach (Node node in editorNodes)
                 {
-                    RemoveControlFromContainer(CustomControlContainer.CanvasEditorMenu, node as Control);
-                    node.QueueFree();
-                    Log.Editor("Removed old EditorMenuBar", true);
-                    return;
+                    if (node is TopRightPanel)
+                    {
+                        try
+                        {
+                            RemoveControlFromContainer(CustomControlContainer.Toolbar, node as Control);
+                            Log.Editor("Removed old TopRightPanel (RemoveControl)", true);
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Editor("Tried to remove TopRightPanel from Toolbar, but couldn't", true);
+                        }
+                        try
+                        {
+                            node.QueueFree();
+                            Log.Editor("Removed old TopRightPanel (QueueFree)", true);
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Editor("Tried to QueueFree() TopRightPanel from Toolbar, but couldn't", true);
+                        }
+                        return;
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                
+                
+                Log.Editor(e.Message, true);
+                
+            }
+            
+        }
+
+        private void RemoveCustomControlsFromEditor()
+        {
+            RemoveControlFromContainer(CustomControlContainer.Toolbar, _topRightPanel);
+
+            _topRightPanel.QueueFree();
         }
     }
 }
