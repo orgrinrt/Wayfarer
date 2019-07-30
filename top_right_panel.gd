@@ -1,41 +1,41 @@
-extends Control
+extends HBoxContainer
+class_name TopRightPanel
 tool
 
-var editor_overwatch;
-onready var Log = get_node("/root/GDLog");
+signal reset_pressed;
+signal build_pressed;
+signal reset_ow_pressed;
 
+#var editor_overwatch;
+onready var Log = load("res://Addons/Wayfarer/GDInterfaces/log.gd");
 
+var build_button;
 var reset_button;
+var reset_ow_button;
 
 func _ready():
+	build_button = get_node("Build");
+	build_button.connect("button_up", self, "on_build_pressed");
+	
 	reset_button = get_node("Reset");
 	reset_button.connect("button_up", self, "on_reset_pressed");
+	
+	reset_ow_button = get_node("ResetOverwatch");
+	reset_ow_button.connect("button_up", self, "on_reset_ow_pressed");
+	pass
+	
+func on_build_pressed():
+	emit_signal("build_pressed");
 	pass
 
 func on_reset_pressed():
-	reset_plugins();
+	emit_signal("reset_pressed");
 	pass
 	
-func reset_plugins():
-	reset_wayfarer_core_plugin();
+func on_reset_ow_pressed():
+	emit_signal("reset_ow_pressed");
 	pass
-	
-func reset_wayfarer_core_plugin():
-	var interface = editor_overwatch.get_editor_interface();
-	interface.set_plugin_enabled("Wayfarer", false);
-	Log.Print("wayfarer disabled", true);
-	remove_old_controls();
-	interface.set_plugin_enabled("Wayfarer", true);
-	#print("wayfarer enabled", true)
-	pass
-	
-func remove_old_controls():
-	var interface = editor_overwatch.get_editor_interface();
-	var base = interface.get_base_control();
-	var editor_bar = base.find_node("EditorMenuBar", true, false);
-	editor_bar.queue_free();
-	pass
-	
-func set_overwatch(var overwatch):
-	editor_overwatch = overwatch;
-	pass
+
+#func set_overwatch(var overwatch):
+#	editor_overwatch = overwatch;
+#	pass
