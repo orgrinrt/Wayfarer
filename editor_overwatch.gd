@@ -46,6 +46,7 @@ func remove_old_controls():
 	
 func reset_plugins():
 	reset_wayfarer_core_plugin();
+	reset_pebbles_plugin();
 	pass
 	
 func reset_wayfarer_core_plugin():
@@ -57,6 +58,17 @@ func reset_wayfarer_core_plugin():
 		remove_old_controls();
 		interface.set_plugin_enabled("Wayfarer", true);
 		Log.Print("Wayfarer enabled", true);
+	pass
+	
+func reset_pebbles_plugin():
+	var interface = get_editor_interface();
+	
+	if (interface.is_plugin_enabled("Wayfarer.Pebbles")):
+		interface.set_plugin_enabled("Wayfarer.Pebbles", false);
+		Log.Print("Wayfarer.Pebbles disabled", true);
+		remove_old_controls();
+		interface.set_plugin_enabled("Wayfarer.Pebbles", true);
+		Log.Print("Wayfarer.Pebbles enabled", true);
 	pass
 	
 func custom_build():
