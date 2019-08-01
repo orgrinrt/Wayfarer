@@ -7,8 +7,8 @@
     <ProjectGuid>{A0D6B264-B0F5-4E46-AD81-10AB77475B60}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wayfarer.Overwatch</RootNamespace>
-    <AssemblyName>Wayfarer.Overwatch</AssemblyName>
+    <RootNamespace>Wayfarer</RootNamespace>
+    <AssemblyName>Wayfarer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <OutputPath>..\..\.mono\temp\bin\$(Configuration)</OutputPath>
     <BaseIntermediateOutputPath>..\..\.mono\temp\obj</BaseIntermediateOutputPath>
