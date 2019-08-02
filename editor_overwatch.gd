@@ -4,8 +4,8 @@ tool
 var top_right_panel;
 var original_build_button;
 
-onready var Log = load("res://Addons/Wayfarer/GDInterfaces/log.gd");
-onready var Helpers = load("res://Addons/Wayfarer/GDInterfaces/helpers.gd");
+onready var Log = load("res://Addons/Wayfarer.Core/GDInterfaces/log.gd");
+onready var Helpers = load("res://Addons/Wayfarer.Core/GDInterfaces/helpers.gd");
 
 func _enter_tree():
 	remove_resetter();
@@ -16,6 +16,8 @@ func _ready():
 	top_right_panel.connect("build_pressed", self, "on_build_pressed");
 	top_right_panel.connect("reset_pressed", self, "on_reset_pressed");
 	top_right_panel.connect("reset_ow_pressed", self, "on_reset_ow_pressed");
+	
+	call_deferred("reset_plugins");
 	pass
 	
 func _exit_tree():
@@ -23,7 +25,7 @@ func _exit_tree():
 	pass
 
 func add_custom_controls():
-	var top_right_scene = load("res://Addons/Wayfarer.Overwatch/Assets/Scenes/Controls/TopRightPanel.tscn");
+	var top_right_scene = load("res://Addons/Wayfarer/Assets/Scenes/Controls/TopRightPanel.tscn");
 	top_right_panel = top_right_scene.instance();
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, top_right_panel);
 	original_build_button = get_original_build_button();
@@ -36,28 +38,20 @@ func remove_custom_controls():
 	original_build_button.show();
 	pass
 	
-func remove_old_controls():
-	var interface = get_editor_interface();
-	var base = interface.get_base_control();
-	var editor_bar = base.find_node("EditorMenuBar", true, false);
-	if (editor_bar != null):
-		editor_bar.queue_free();
-	pass
-	
 func reset_plugins():
 	reset_wayfarer_core_plugin();
 	reset_pebbles_plugin();
+	reset_explorer_plugin();
 	pass
 	
 func reset_wayfarer_core_plugin():
 	var interface = get_editor_interface();
 	
-	if (interface.is_plugin_enabled("Wayfarer")):
-		interface.set_plugin_enabled("Wayfarer", false);
-		Log.Print("Wayfarer disabled", true);
-		remove_old_controls();
-		interface.set_plugin_enabled("Wayfarer", true);
-		Log.Print("Wayfarer enabled", true);
+	if (interface.is_plugin_enabled("Wayfarer.Core")):
+		interface.set_plugin_enabled("Wayfarer.Core", false);
+		Log.Wf.Print("Wayfarer.Core disabled", true);
+		interface.set_plugin_enabled("Wayfarer.Core", true);
+		Log.Wf.Print("Wayfarer.Core enabled", true);
 	pass
 	
 func reset_pebbles_plugin():
@@ -65,10 +59,19 @@ func reset_pebbles_plugin():
 	
 	if (interface.is_plugin_enabled("Wayfarer.Pebbles")):
 		interface.set_plugin_enabled("Wayfarer.Pebbles", false);
-		Log.Print("Wayfarer.Pebbles disabled", true);
-		remove_old_controls();
+		Log.Wf.Print("Wayfarer.Pebbles disabled", true);
 		interface.set_plugin_enabled("Wayfarer.Pebbles", true);
-		Log.Print("Wayfarer.Pebbles enabled", true);
+		Log.Wf.Print("Wayfarer.Pebbles enabled", true);
+	pass
+	
+func reset_explorer_plugin():
+	var interface = get_editor_interface();
+	
+	if (interface.is_plugin_enabled("Wayfarer.Editor.Explorer")):
+		interface.set_plugin_enabled("Wayfarer.Editor.Explorer", false);
+		Log.Wf.Print("Wayfarer.Editor.Explorer disabled", true);
+		interface.set_plugin_enabled("Wayfarer.Editor.Explorer", true);
+		Log.Wf.Print("Wayfarer.Editor.Explorer enabled", true);
 	pass
 	
 func custom_build():
@@ -78,7 +81,7 @@ func custom_build():
 	
 	godotsharpeditor.call("_build_solution_pressed");
 	
-	on_reset_pressed();
+	call_deferred("on_reset_pressed");
 	pass
 
 func on_build_pressed():
@@ -90,7 +93,7 @@ func on_reset_pressed():
 	pass
 	
 func on_reset_ow_pressed():
-	var resetter = load("res://Addons/Wayfarer.Overwatch/overwatch_reset.gd");
+	var resetter = load("res://Addons/Wayfarer/overwatch_reset.gd");
 	var instance = resetter.new();
 	
 	var interface = get_editor_interface();
