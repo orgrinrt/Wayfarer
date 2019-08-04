@@ -2,13 +2,19 @@ extends EditorPlugin
 tool
 
 var top_right_panel;
+var wayfarer_menu;
 var original_build_button;
 
-onready var Log = load("res://Addons/Wayfarer.Core/GDInterfaces/log.gd");
-onready var Helpers = load("res://Addons/Wayfarer.Core/GDInterfaces/helpers.gd");
+var Log = preload("res://Addons/Wayfarer.Core/GDInterfaces/log.gd");
+var Helpers = preload("res://Addons/Wayfarer.Core/GDInterfaces/helpers.gd");
+var Utils = preload("res://Addons/Wayfarer/file_utils.gd").new();
+var Meta : WayfarerMeta = preload("res://Addons/Wayfarer/Data/Meta.tres");
+var Settings : WayfarerSettings = preload("res://wfsettings.tres");
 
 func _enter_tree() -> void:
 	remove_resetter();
+	Utils.set_plugin(self);
+	update_installed_modules_list();
 	pass
 	
 func _ready() -> void:
@@ -30,11 +36,35 @@ func add_custom_controls() -> void:
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, top_right_panel);
 	original_build_button = get_original_build_button();
 	original_build_button.hide();
+	
+	var top_menu = get_top_menu_root();
+	if (is_instance_valid(top_menu)):
+		var menu_scene = load("res://Addons/Wayfarer/Assets/Scenes/Controls/WayfarerMenu.tscn");
+		if (is_instance_valid(menu_scene)):
+			wayfarer_menu = menu_scene.instance();
+			var scene_button : Control = top_menu.get_child(0);
+			var style = scene_button.get("custom_styles/hover");
+			if is_instance_valid(style):
+				wayfarer_menu.set("custom_styles/hover", style);
+			top_menu.add_child(wayfarer_menu);
+		else:
+			Log.Wf.Print("The WayfarerMenu scene was not valid!", true);
 	pass
 
 func remove_custom_controls() -> void:
 	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, top_right_panel);
 	top_right_panel.queue_free();
+	
+	var top_menu = get_top_menu_root();
+	if (is_instance_valid(top_menu)):
+		if (is_instance_valid(wayfarer_menu)):
+			top_menu.remove_child(wayfarer_menu);
+			wayfarer_menu.queue_free();
+		else:
+			Log.Wf.Print("The Wayfarer Menu instance was not valid!", true);
+	else:
+		Log.Wf.Print("The Top Menu instance was not valid!", true);
+	
 	original_build_button.show();
 	pass
 	
@@ -69,7 +99,7 @@ func enable_plugins(var state: Array) -> void:
 	
 func reset_plugins():
 	var state = disable_plugins();
-	ensure_iterator_is_gone();
+	#ensure_iterator_is_gone();
 	call_deferred("enable_plugins", state);
 	pass
 	
@@ -142,7 +172,7 @@ func custom_build():
 	
 	#yield(get_tree().create_timer(0.5), "timeout") # we need to be sure everything's free'd before continuing... maybe there's a better way?
 	
-	ensure_iterator_is_gone();
+	#ensure_iterator_is_gone();
 	
 	var root = get_tree().get_root();
 	var editor_base = root.get_node("EditorNode");
@@ -193,24 +223,35 @@ func get_original_build_button():
 				return child;
 	pass
 	
-func ensure_iterator_is_gone():
-	Log.Wf.Print("Ensuring the EditorIterator is gone...", true);
-	"""
-	var interface = get_editor_interface();
-	#if (interface.is_plugin_enabled("Wayfarer.Editor")):
-	var iterator = get_editor_interface().get_base_control().get_node("EditorIterator");
-	var iterator2 = get_editor_interface().get_base_control().get_node("EditorIterator2");
-	if (is_instance_valid(iterator)):
-		iterator.queue_free();
-		Log.Wf.Print("The Iterator instance queued free, we OK", true);
-		ensure_iterator_is_gone();
-	else:
-		Log.Wf.Print("The Iterator instance wasn't valid, trying alt name...", true);
-		if (is_instance_valid(iterator2)):
-			iterator2.queue_free();
-			Log.Wf.Print("The Iterator instance queued free, we OK (alt name)", true);
-			ensure_iterator_is_gone();
+func get_top_menu_root() -> Control:
+	var base = get_editor_interface().get_base_control();
+	var all = Helpers.get_children_recursive(base);
+	
+	for child in all:
+		if (child is Button):
+			if (child.text == "Help"):
+				return child.get_parent();
+				
+	return null;
+	pass
+	
+func update_installed_modules_list():
+	var addons : Array = Utils.get_dirs("res://Addons");
+	var names : Array = Utils.get_dirs("res://Addons", false);
+	var i = 0;
+	
+	for dir_path in addons:
+		var metas = Utils.get_files_recursive(dir_path, Utils.FILTER_MODULE_META);
+		if (metas.size() > 1):
+			Log.Wf.Print("FOUND MULTIPLE WAYFARE MODULE META FILES WITHIN ADDON", true);
+			for module in metas:
+				print(module);
+		elif (metas.size() == 1):
+			Settings.add_installed_module(load(metas[0]));
+			Log.Wf.Print("ADDED INSTALLED MODULE " + dir_path, true);
 		else:
-			print("Nothing happened");
-			return"""
+			Log.Wf.Print("FOUND NO META FILES FOR ADDON " + dir_path, true);
+			if names[i].begins_with("Wayfarer"):
+				Log.Wf.Print("          ...but we might want to create one now", true);
+		i += 1;
 	pass
