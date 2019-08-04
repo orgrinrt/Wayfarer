@@ -3,7 +3,7 @@ extends Node
 
 var _interface;
 
-onready var Log = load("res://Addons/Wayfarer.Core/GDInterfaces/log.gd");
+var Log = preload("res://Addons/Wayfarer/GDInterfaces/log.gd");
 
 func _ready():
 	pass 

@@ -7,7 +7,7 @@ signal build_pressed;
 signal reset_ow_pressed;
 
 #var editor_overwatch;
-onready var Log = load("res://Addons/Wayfarer.Core/GDInterfaces/log.gd");
+onready var Log = load("res://Addons/Wayfarer/GDInterfaces/log.gd");
 
 var build_button;
 var reset_button;

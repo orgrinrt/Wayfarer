@@ -57,8 +57,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModuleSystem\WayfarerModule.cs" />
+    <Compile Include="Nodes\WayfarerNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WayfarerModule.cs" />
+    <Compile Include="Utils\Attributes\AttributeHandler.cs" />
+    <Compile Include="Utils\Attributes\GetAttribute.cs" />
+    <Compile Include="Utils\Coroutine\CoroutineHandle.cs" />
+    <Compile Include="Utils\Coroutine\CoroutineHandler.cs" />
+    <Compile Include="Utils\Debug\Log.cs" />
+    <Compile Include="Utils\Debug\LoggingLevel.cs" />
+    <Compile Include="Utils\Debug\Wayfarer.cs" />
+    <Compile Include="Utils\Files\Directories.cs" />
+    <Compile Include="Utils\Files\Files.cs" />
+    <Compile Include="Utils\Files\Paths.cs" />
+    <Compile Include="Utils\Gd.cs" />
+    <Compile Include="Utils\Helpers\Arrays.cs" />
+    <Compile Include="Utils\Helpers\Bytes.cs" />
+    <Compile Include="Utils\Helpers\Colors.cs" />
+    <Compile Include="Utils\Helpers\Direction.cs" />
+    <Compile Include="Utils\Helpers\Math.cs" />
+    <Compile Include="Utils\Helpers\Nodes.cs" />
+    <Compile Include="Utils\Helpers\Sqlite.cs" />
+    <Compile Include="Utils\Helpers\Textures.cs" />
+    <Compile Include="Utils\Helpers\Vectors.cs" />
+    <Compile Include="Utils\Localization\Lang.cs" />
+    <Compile Include="Utils\Physics\CollisionGroup.cs" />
+    <Compile Include="Utils\Physics\CollisionLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="plugin.cfg" />

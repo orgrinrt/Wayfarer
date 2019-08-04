@@ -7,7 +7,7 @@ const FILTER_PEBBLER = ["*.pebbler"]
 const FILTER_RES = ["*.tres"]
 const FILTER_SCENE = ["*.tscn"]
 
-var plugin;
+var plugin : EditorPlugin;
 var filesystem : EditorFileSystem;
 
 func get_files_from_dir(path, return_path = true, filter = FILTER_DEFAULT) -> Array:
@@ -67,6 +67,6 @@ func _match_name(name : String, filter) -> bool:
 
 	return matched
 	
-func set_plugin(var p):
+func set_plugin(var p : EditorPlugin):
 	plugin = p;
 	filesystem = plugin.get_editor_interface().get_resource_filesystem()

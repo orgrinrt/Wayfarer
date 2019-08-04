@@ -1,6 +1,6 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://Addons/Wayfarer/Assets/Resources/module_meta.gd" type="Script" id=1]
+[ext_resource path="res://Addons/Wayfarer/ModuleSystem/module_meta.gd" type="Script" id=1]
 
 [resource]
 script = ExtResource( 1 )
@@ -9,3 +9,4 @@ desc = null
 version = "0.0.2"
 deps = null
 deps_vers = null
+node_path = null

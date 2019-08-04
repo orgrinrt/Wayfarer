@@ -4,4 +4,4 @@
 
 [resource]
 script = ExtResource( 1 )
-all_modules = [ "Wayfarer", "Wayfarer.Core", "Wayfarer.Editor", "Wayfarer.Editor.Explorer", "Wayfarer.Pebbles" ]
+all_modules = null

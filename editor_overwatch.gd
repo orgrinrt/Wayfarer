@@ -5,10 +5,10 @@ var top_right_panel;
 var wayfarer_menu;
 var original_build_button;
 
-var Log = preload("res://Addons/Wayfarer.Core/GDInterfaces/log.gd");
-var Helpers = preload("res://Addons/Wayfarer.Core/GDInterfaces/helpers.gd");
+var Log = preload("res://Addons/Wayfarer/GDInterfaces/log.gd");
+var Helpers = preload("res://Addons/Wayfarer/GDInterfaces/helpers.gd");
 var Utils = preload("res://Addons/Wayfarer/file_utils.gd").new();
-var Meta : WayfarerMeta = preload("res://Addons/Wayfarer/Data/Meta.tres");
+var Meta : WayfarerMeta = preload("res://Addons/Wayfarer/Data/meta.tres");
 var Settings : WayfarerSettings = preload("res://wfsettings.tres");
 
 func _enter_tree() -> void:
@@ -239,6 +239,8 @@ func update_installed_modules_list():
 	var addons : Array = Utils.get_dirs("res://Addons");
 	var names : Array = Utils.get_dirs("res://Addons", false);
 	var i = 0;
+	
+	Settings.set_installed_modules([]);
 	
 	for dir_path in addons:
 		var metas = Utils.get_files_recursive(dir_path, Utils.FILTER_MODULE_META);
