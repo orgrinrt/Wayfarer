@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Wayfarer.Core.Utils.Attributes
+namespace Wayfarer.Utils.Attributes
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class GetAttribute : Attribute

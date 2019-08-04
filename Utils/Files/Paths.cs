@@ -2,7 +2,7 @@
 using Godot;
 using Path = System.IO.Path;
 
-namespace Wayfarer.Core.Utils.Files
+namespace Wayfarer.Utils.Files
 {
     public class Paths
     {

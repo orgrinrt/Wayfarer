@@ -1,4 +1,4 @@
-﻿namespace Wayfarer.Core.Utils.Helpers
+﻿namespace Wayfarer.Utils.Helpers
 {
     public class Colors
     {

@@ -1,4 +1,4 @@
-﻿namespace Wayfarer.Core.Utils.Physics
+﻿namespace Wayfarer.Utils.Physics
 {
     public enum CollisionLayer
     {

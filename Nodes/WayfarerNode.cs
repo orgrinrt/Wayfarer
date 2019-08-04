@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Wayfarer.Core.Nodes
+namespace Wayfarer.Nodes
 {
     public class WayfarerNode : Node
     {

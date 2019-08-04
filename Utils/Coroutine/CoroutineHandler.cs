@@ -27,7 +27,7 @@ SOFTWARE.
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Wayfarer.Core.Utils.Coroutine
+namespace Wayfarer.Utils.Coroutine
 {
     /// <summary>
     /// A container for running multiple routines in parallel. Coroutines can be nested.

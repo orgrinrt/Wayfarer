@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Wayfarer.Core.Utils.Physics
+namespace Wayfarer.Utils.Physics
 {
     public class CollisionGroup
     {

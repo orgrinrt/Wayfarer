@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using Godot;
-using Wayfarer.Core.Nodes;
-using Wayfarer.Core.Utils.Attributes;
-using Wayfarer.Core.Utils.Debug;
+using Wayfarer.Nodes;
+using Wayfarer.Utils.Attributes;
+using Wayfarer.Utils.Debug;
 
-namespace Wayfarer.Core.Utils.Helpers
+namespace Wayfarer.Utils.Helpers
 {
     public static class Nodes
     {

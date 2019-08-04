@@ -1,10 +1,8 @@
-﻿using System;
-using Godot;
-using Wayfarer.Core.Utils.Debug;
+﻿using Godot;
 using Array = Godot.Collections.Array;
 using Object = Godot.Object;
 
-namespace Wayfarer.Core.Utils.Files
+namespace Wayfarer.Utils.Files
 {
     public class Files
     {

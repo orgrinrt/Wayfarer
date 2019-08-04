@@ -1,16 +1,14 @@
 #if TOOLS
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Security;
 using Godot;
 using Godot.Collections;
+using Wayfarer.Utils.Debug;
+using Wayfarer.Utils.Files;
 using Array = Godot.Collections.Array;
-using Object = Godot.Object;
 
-namespace Wayfarer
+namespace Wayfarer.ModuleSystem
 {
     [Tool]
     public class WayfarerModule : EditorPlugin
@@ -137,11 +135,9 @@ namespace Wayfarer
 
             parentPath = parentPath.Remove(parentPath.Length - 1);
 
-            GDScript scriptRes = GD.Load<GDScript>("res://Addons/Wayfarer/file_utils.gd");
-            Object fileUtils = scriptRes.New();
-            fileUtils.Call("set_plugin", reference);
+            Files.HasPlugin(reference);
             
-            Array result = (Array) fileUtils.Call("get_files_from_dir", parentPath, true, new Array { "*.tres" });
+            Array result = Files.GetFilesFromDir(parentPath, true, Files.FilterModuleMeta);
     
             _resource = GD.Load((string)result[0]);
 
@@ -151,6 +147,11 @@ namespace Wayfarer
             _deps = (Array) _resource.Get("deps");
             _depsVersions = (Array) _resource.Get("deps_vers");
             _ref = reference;
+            if (_resource.Get("ref") == null)
+            {
+                _resource.Set("ref", reference);
+                Log.Wf.Print("Ref was null, set reference to " + reference.Name, true);
+            }
         }
     }
 

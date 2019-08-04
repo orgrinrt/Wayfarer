@@ -1,9 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
-using Wayfarer.Core.Utils.Debug;
+using Wayfarer.Utils.Debug;
 
-namespace Wayfarer.Core.Utils.Files
+namespace Wayfarer.Utils.Files
 {
     public static class Directories
     {

@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Wayfarer.Core.Utils.Helpers
+namespace Wayfarer.Utils.Helpers
 {
     public static class Textures
     {

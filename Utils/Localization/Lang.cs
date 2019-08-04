@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Wayfarer.Core.Utils.Localization
+namespace Wayfarer.Utils.Localization
 {
     public class Lang
     {

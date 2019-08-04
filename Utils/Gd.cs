@@ -1,8 +1,8 @@
 ﻿using Godot;
-using Wayfarer.Core.Utils.Debug;
-using Wayfarer.Core.Utils.Helpers;
+using Wayfarer.Utils.Debug;
+using Wayfarer.Utils.Helpers;
 
-namespace Wayfarer.Core
+namespace Wayfarer.Utils
 {
     #if TOOLS
     [Tool]

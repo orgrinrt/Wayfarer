@@ -1,7 +1,7 @@
 ﻿using Godot;
 using Godot.Collections;
 
-namespace Wayfarer.Core.Utils.Helpers
+namespace Wayfarer.Utils.Helpers
 {
     public static class Arrays
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using Godot;
 using Godot.Collections;
-using Wayfarer.Core.Utils.Debug;
-using Wayfarer.Core.Utils.Files;
+using Wayfarer.Utils.Debug;
+using Wayfarer.Utils.Files;
 
-namespace Wayfarer.Core.Utils.Helpers
+namespace Wayfarer.Utils.Helpers
 {
     public static class Sqlite
     {
