@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Addons/Wayfarer/wayfarer_menu.gd" type="Script" id=1]
+
+[node name="WayfarerMenu" type="MenuButton"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Wayfarer"
+flat = false
+items = [ "Settings", null, 0, false, false, -1, 0, null, "", false, "", null, 0, false, false, -1, 0, null, "", true, "Show Missing", null, 1, false, false, -1, 0, null, "", false, "", null, 0, false, false, -1, 0, null, "", true ]
+switch_on_hover = true
+script = ExtResource( 1 )
