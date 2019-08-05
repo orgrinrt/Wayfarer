@@ -10,6 +10,7 @@ var Helpers = preload("res://Addons/Wayfarer/GDInterfaces/helpers.gd");
 var Utils = preload("res://Addons/Wayfarer/file_utils.gd").new();
 var Meta : WayfarerMeta = preload("res://Addons/Wayfarer/Data/meta.tres");
 var Settings : WayfarerSettings = preload("res://wfsettings.tres");
+var WayfarerInspector : WayfarerInspector = preload("res://Addons/Wayfarer/Inspector/inspector.gd").new();
 
 func _enter_tree() -> void:
 	remove_resetter();
@@ -49,9 +50,12 @@ func add_custom_controls() -> void:
 			top_menu.add_child(wayfarer_menu);
 		else:
 			Log.Wf.Print("The WayfarerMenu scene was not valid!", true);
+			
+	add_inspector_plugin(WayfarerInspector);
 	pass
 
 func remove_custom_controls() -> void:
+	remove_inspector_plugin(WayfarerInspector);
 	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, top_right_panel);
 	top_right_panel.queue_free();
 	
