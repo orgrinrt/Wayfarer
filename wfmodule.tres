@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource( 1 )
 name = "Wayfarer"
-desc = null
+desc = "Test"
 version = "0.0.2"
 deps = null
 deps_vers = null
