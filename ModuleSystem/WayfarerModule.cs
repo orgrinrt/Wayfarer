@@ -1,5 +1,6 @@
 #if TOOLS
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -7,6 +8,7 @@ using Godot.Collections;
 using Wayfarer.Utils.Debug;
 using Wayfarer.Utils.Files;
 using Array = Godot.Collections.Array;
+using Object = Godot.Object;
 
 namespace Wayfarer.ModuleSystem
 {
@@ -19,7 +21,7 @@ namespace Wayfarer.ModuleSystem
         public Array ModuleDependencies => GetModuleDependencies();
         public Array ModuleDependencyVersions => GetModuleDependencyVersions();
         public ModuleMeta ModuleMeta => GetModuleMeta();
-        public WayfarerSettings WayfarerSettings => GetWayfarerSettings();
+        public WayfarerProjectSettings WayfarerProjectSettings => GetWayfarerSettings();
 
         public override void _EnterTree()
         {
@@ -32,7 +34,6 @@ namespace Wayfarer.ModuleSystem
             base._Ready();
             
             Name = ModuleName;
-            GD.Print(Name);
         }
 
         public override void _ExitTree()
@@ -54,9 +55,9 @@ namespace Wayfarer.ModuleSystem
             return settings;
         }
 
-        private WayfarerSettings GetWayfarerSettings()
+        private WayfarerProjectSettings GetWayfarerSettings()
         {
-            return new WayfarerSettings();
+            return new WayfarerProjectSettings();
         }
 
         private ModuleMeta GetModuleMeta()
@@ -100,14 +101,12 @@ namespace Wayfarer.ModuleSystem
         private string _version;
         private Array _deps;
         private Array _depsVersions;
-        private WayfarerModule _ref;
 
         public string Name => _name;
         public string Desc => _desc;
         public string Version => _version;
         public Array Deps => _deps;
         public Array DepsVersions => _depsVersions;
-        public WayfarerModule Ref => _ref;
 
         public ModuleMeta(WayfarerModule reference)
         {
@@ -119,7 +118,7 @@ namespace Wayfarer.ModuleSystem
 
             foreach (string s in pathParts)
             {
-                if (s.StartsWith("res"))
+                if (s.StartsWith("res:"))
                 {
                     parentPath = s + "//";
                     continue;
@@ -146,16 +145,10 @@ namespace Wayfarer.ModuleSystem
             _version = (string) _resource.Get("version");
             _deps = (Array) _resource.Get("deps");
             _depsVersions = (Array) _resource.Get("deps_vers");
-            _ref = reference;
-            if (_resource.Get("ref") == null)
-            {
-                _resource.Set("ref", reference);
-                Log.Wf.Print("Ref was null, set reference to " + reference.Name, true);
-            }
         }
     }
 
-    public class WayfarerSettings
+    public class WayfarerProjectSettings
     {
         private Resource _resource;
         public Resource Resource => _resource;
@@ -163,7 +156,7 @@ namespace Wayfarer.ModuleSystem
         private Array _installedModules;
         private Dictionary _settings;
 
-        public WayfarerSettings()
+        public WayfarerProjectSettings()
         {
             _resource = GD.Load("res://wfsettings.tres");
 
