@@ -1,7 +1,8 @@
 extends WayfarerSettings
 tool
 
-var installed_modules : Array; # array of module_meta.gd resources
+export var installed_modules : Array; # array of module_meta.gd resources
+var reset_on_ready : bool;
 
 func _get_property_list():
 	var list := [];
