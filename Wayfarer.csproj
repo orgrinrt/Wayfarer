@@ -57,13 +57,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModuleSystem\ModuleMeta.cs" />
     <Compile Include="ModuleSystem\WayfarerModule.cs" />
+    <Compile Include="ModuleSystem\WayfarerProjectSettings.cs" />
     <Compile Include="Nodes\WayfarerNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Attributes\AttributeHandler.cs" />
     <Compile Include="Utils\Attributes\GetAttribute.cs" />
     <Compile Include="Utils\Coroutine\CoroutineHandle.cs" />
     <Compile Include="Utils\Coroutine\CoroutineHandler.cs" />
+    <Compile Include="Utils\Debug\Exceptions\GdCallFailedException.cs" />
+    <Compile Include="Utils\Debug\Exceptions\GdCallReturnNullException.cs" />
     <Compile Include="Utils\Debug\Log.cs" />
     <Compile Include="Utils\Debug\LoggingLevel.cs" />
     <Compile Include="Utils\Debug\Wayfarer.cs" />
