@@ -74,6 +74,17 @@ namespace Wayfarer.Utils.Helpers
 
             return matches.ToArray();
         }
+
+        public static bool HasChildOfType<T>(this Node self) where T : Node
+        {
+            T[] childrenOfType = self.GetChildrenOfType<T>();
+
+            if (childrenOfType.Length > 0)
+            {
+                return true;
+            }
+            else return false;
+        }
         
         public static void ReParent(this Godot.Node child, Godot.Node newParent)
         {
