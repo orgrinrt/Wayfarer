@@ -13,25 +13,32 @@ var Settings : WayfarerSettings = preload("res://wfsettings.tres");
 var WayfarerInspector : WayfarerInspector = preload("res://Addons/Wayfarer/Inspector/inspector.gd").new();
 
 func _enter_tree() -> void:
-	remove_resetter();
+	var elog : RichTextLabel = get_editor_log_text();
+	elog.text = "";
+	_remove_resetter();
 	Utils.set_plugin(self);
-	update_installed_modules_list();
 	pass
 	
 func _ready() -> void:
-	add_custom_controls();
-	top_right_panel.connect("build_pressed", self, "on_build_pressed");
-	top_right_panel.connect("reset_pressed", self, "on_reset_pressed");
-	top_right_panel.connect("reset_ow_pressed", self, "on_reset_ow_pressed");
+	_add_custom_controls();
+	_update_installed_modules_list();
+	top_right_panel.connect("build_pressed", self, "_on_build_pressed");
+	top_right_panel.connect("reset_pressed", self, "_on_reset_pressed");
+	top_right_panel.connect("reset_ow_pressed", self, "_on_reset_ow_pressed");
 	
-	call_deferred("reset_plugins");
+	if Settings.reset_on_ready:
+		call_deferred("_on_reset_ow_pressed");
+	else:
+		call_deferred("_on_reset_pressed");
 	pass
+	
+	set_reset_on_ready(false);
 	
 func _exit_tree() -> void:
-	remove_custom_controls();
+	_remove_custom_controls();
 	pass
 
-func add_custom_controls() -> void:
+func _add_custom_controls() -> void:
 	var top_right_scene = load("res://Addons/Wayfarer/Assets/Scenes/Controls/TopRightPanel.tscn");
 	top_right_panel = top_right_scene.instance();
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, top_right_panel);
@@ -54,7 +61,7 @@ func add_custom_controls() -> void:
 	add_inspector_plugin(WayfarerInspector);
 	pass
 
-func remove_custom_controls() -> void:
+func _remove_custom_controls() -> void:
 	remove_inspector_plugin(WayfarerInspector);
 	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, top_right_panel);
 	top_right_panel.queue_free();
@@ -79,26 +86,35 @@ func disable_plugins() -> Array:
 	result.append(interface.is_plugin_enabled("Wayfarer.Core"));
 	result.append(interface.is_plugin_enabled("Wayfarer.Editor"));
 	result.append(interface.is_plugin_enabled("Wayfarer.Editor.Explorer"));
+	result.append(interface.is_plugin_enabled("Wayfarer.Editor.Taskmaster"));
 	result.append(interface.is_plugin_enabled("Wayfarer.Pebbles"));
 		
 	# NOTE: Reverse order than in enabling - the most important last
-	disable_pebbles_plugin();
-	disable_explorer_plugin();
-	disable_editor_plugin();
-	disable_wayfarer_core_plugin();
+	_disable_pebbles_plugin();
+	_disable_taskmaster_plugin();
+	_disable_explorer_plugin();
+	_disable_editor_plugin();
+	_disable_wayfarer_core_plugin();
 	return result;
 	
 func enable_plugins(var state: Array) -> void:
 	if (state[0]):
-		enable_wayfarer_core_plugin();
+		_enable_wayfarer_core_plugin();
 	if (state[1]):
-		enable_editor_plugin();
+		_enable_editor_plugin();
 	if (state[2]):
-		enable_explorer_plugin();
+		_enable_explorer_plugin();
 	if (state[3]):
-		enable_pebbles_plugin();
+		_enable_taskmaster_plugin();
+	if (state[4]):
+		_enable_pebbles_plugin();
 		
 	state.clear();
+	pass
+	
+func enable_plugins_and_reset_ow(var state: Array) -> void:
+	enable_plugins(state);
+	_on_reset_ow_pressed();
 	pass
 	
 func reset_plugins():
@@ -107,7 +123,7 @@ func reset_plugins():
 	call_deferred("enable_plugins", state);
 	pass
 	
-func disable_wayfarer_core_plugin():
+func _disable_wayfarer_core_plugin():
 	var interface = get_editor_interface();
 	
 	if (interface.is_plugin_enabled("Wayfarer.Core")):
@@ -115,7 +131,7 @@ func disable_wayfarer_core_plugin():
 		Log.Wf.Print("Wayfarer.Core disabled", true);
 	pass
 	
-func enable_wayfarer_core_plugin():
+func _enable_wayfarer_core_plugin():
 	var interface = get_editor_interface();
 	
 	if (!interface.is_plugin_enabled("Wayfarer.Core")):
@@ -123,7 +139,7 @@ func enable_wayfarer_core_plugin():
 		Log.Wf.Print("Wayfarer.Core enabled", true);
 	pass
 	
-func disable_pebbles_plugin():
+func _disable_pebbles_plugin():
 	var interface = get_editor_interface();
 	
 	if (interface.is_plugin_enabled("Wayfarer.Pebbles")):
@@ -131,7 +147,7 @@ func disable_pebbles_plugin():
 		Log.Wf.Print("Wayfarer.Pebbles disabled", true);
 	pass
 	
-func enable_pebbles_plugin():
+func _enable_pebbles_plugin():
 	var interface = get_editor_interface();
 	
 	if (!interface.is_plugin_enabled("Wayfarer.Pebbles")):
@@ -139,7 +155,7 @@ func enable_pebbles_plugin():
 		Log.Wf.Print("Wayfarer.Pebbles enabled", true);
 	pass
 	
-func disable_editor_plugin():
+func _disable_editor_plugin():
 	var interface = get_editor_interface();
 	
 	if (interface.is_plugin_enabled("Wayfarer.Editor")):
@@ -147,7 +163,7 @@ func disable_editor_plugin():
 		Log.Wf.Print("Wayfarer.Editor disabled", true);
 	pass
 	
-func enable_editor_plugin():
+func _enable_editor_plugin():
 	var interface = get_editor_interface();
 	
 	if (!interface.is_plugin_enabled("Wayfarer.Editor")):
@@ -155,7 +171,7 @@ func enable_editor_plugin():
 		Log.Wf.Print("Wayfarer.Editor enabled", true);
 	pass
 	
-func disable_explorer_plugin():
+func _disable_explorer_plugin():
 	var interface = get_editor_interface();
 	
 	if (interface.is_plugin_enabled("Wayfarer.Editor.Explorer")):
@@ -163,12 +179,28 @@ func disable_explorer_plugin():
 		Log.Wf.Print("Wayfarer.Editor.Explorer disabled", true);
 	pass
 	
-func enable_explorer_plugin():
+func _enable_explorer_plugin():
 	var interface = get_editor_interface();
 	
 	if (!interface.is_plugin_enabled("Wayfarer.Editor.Explorer")):
 		interface.set_plugin_enabled("Wayfarer.Editor.Explorer", true);
 		Log.Wf.Print("Wayfarer.Editor.Explorer enabled", true);
+	pass
+	
+func _disable_taskmaster_plugin():
+	var interface = get_editor_interface();
+	
+	if (interface.is_plugin_enabled("Wayfarer.Editor.Taskmaster")):
+		interface.set_plugin_enabled("Wayfarer.Editor.Taskmaster", false);
+		Log.Wf.Print("Wayfarer.Editor.Taskmaster disabled", true);
+	pass
+	
+func _enable_taskmaster_plugin():
+	var interface = get_editor_interface();
+	
+	if (!interface.is_plugin_enabled("Wayfarer.Editor.Taskmaster")):
+		interface.set_plugin_enabled("Wayfarer.Editor.Taskmaster", true);
+		Log.Wf.Print("Wayfarer.Editor.Taskmaster enabled", true);
 	pass
 	
 func custom_build():
@@ -186,18 +218,18 @@ func custom_build():
 	
 	#yield(get_tree().create_timer(2.0), "timeout") # we need to be sure that the build process is finished... we need a better way for this
 	#enable_plugins(state);
-	call_deferred("enable_plugins", state);
+	call_deferred("enable_plugins_and_reset_ow", state);
 	pass
 
-func on_build_pressed():
+func _on_build_pressed():
 	custom_build();
 	pass
 	
-func on_reset_pressed():
+func _on_reset_pressed():
 	reset_plugins();
 	pass
 	
-func on_reset_ow_pressed():
+func _on_reset_ow_pressed():
 	var resetter = load("res://Addons/Wayfarer/overwatch_reset.gd");
 	var instance = resetter.new();
 	
@@ -208,15 +240,25 @@ func on_reset_ow_pressed():
 	base.add_child(instance);
 	pass
 	
-func remove_resetter():
+func _remove_resetter():
 	var interface = get_editor_interface();
 	var base = interface.get_base_control();
-	var resetter = base.get_node("Resetter");
-	if (resetter != null):
-		resetter.queue_free();
+	var children = base.get_children();
+	var resetter = null;
+	
+	for child in children:
+		if (child.name == "Resetter"):
+			if (is_instance_valid(child)):
+				resetter = child;
+				resetter.queue_free();
+				
+	if resetter == null:
+		set_reset_on_ready(true);
+	else:
+		set_reset_on_ready(false);
 	pass
 	
-func get_original_build_button():
+func get_original_build_button() -> Button:
 	var base = get_editor_interface().get_base_control();
 	var all = Helpers.get_children_recursive(base);
 	
@@ -225,7 +267,7 @@ func get_original_build_button():
 			if (child.text == "Build"):
 				original_build_button = child;
 				return child;
-	pass
+	return null;
 	
 func get_top_menu_root() -> Control:
 	var base = get_editor_interface().get_base_control();
@@ -239,7 +281,19 @@ func get_top_menu_root() -> Control:
 	return null;
 	pass
 	
-func update_installed_modules_list():
+func get_editor_log_text() -> RichTextLabel:
+	var base = get_editor_interface().get_base_control();
+	var all = Helpers.get_children_recursive(base);
+	
+	for child in all:
+		if (child is Button):
+			if (child.text == "Clear"):
+				return child.get_parent().get_parent().get_child(1);
+				
+	return null;
+	pass
+	
+func _update_installed_modules_list() -> void:
 	var addons : Array = Utils.get_dirs("res://Addons");
 	var names : Array = Utils.get_dirs("res://Addons", false);
 	var i = 0;
@@ -260,4 +314,8 @@ func update_installed_modules_list():
 			if names[i].begins_with("Wayfarer"):
 				Log.Wf.Print("          ...but we might want to create one now", true);
 		i += 1;
+	pass
+	
+func set_reset_on_ready(value : bool) -> void:
+	Settings.reset_on_ready = value;
 	pass
