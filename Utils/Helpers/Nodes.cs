@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Godot;
-using Wayfarer.Nodes;
 using Wayfarer.Utils.Attributes;
 using Wayfarer.Utils.Debug;
 
@@ -12,7 +11,7 @@ namespace Wayfarer.Utils.Helpers
         {
             self.SetupAttributes();
 
-            if (self is WayfarerNode)
+            //if (self is WayfarerNode) // we'll come back to this at some point
             {
                 // further stuff that only concerns the WayfarerNodes
             }
