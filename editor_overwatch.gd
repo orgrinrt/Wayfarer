@@ -84,6 +84,7 @@ func disable_plugins() -> Array:
 	var interface = get_editor_interface();
 	
 	result.append(interface.is_plugin_enabled("Wayfarer.Core"));
+	result.append(interface.is_plugin_enabled("Wayfarer.UI"));
 	result.append(interface.is_plugin_enabled("Wayfarer.Editor"));
 	result.append(interface.is_plugin_enabled("Wayfarer.Editor.Explorer"));
 	result.append(interface.is_plugin_enabled("Wayfarer.Editor.Taskmaster"));
@@ -94,6 +95,7 @@ func disable_plugins() -> Array:
 	_disable_taskmaster_plugin();
 	_disable_explorer_plugin();
 	_disable_editor_plugin();
+	_disable_ui_core_plugin();
 	_disable_wayfarer_core_plugin();
 	return result;
 	
@@ -101,12 +103,14 @@ func enable_plugins(var state: Array) -> void:
 	if (state[0]):
 		_enable_wayfarer_core_plugin();
 	if (state[1]):
-		_enable_editor_plugin();
+		_enable_ui_core_plugin();
 	if (state[2]):
-		_enable_explorer_plugin();
+		_enable_editor_plugin();
 	if (state[3]):
-		_enable_taskmaster_plugin();
+		_enable_explorer_plugin();
 	if (state[4]):
+		_enable_taskmaster_plugin();
+	if (state[5]):
 		_enable_pebbles_plugin();
 		
 	state.clear();
@@ -137,6 +141,22 @@ func _enable_wayfarer_core_plugin():
 	if (!interface.is_plugin_enabled("Wayfarer.Core")):
 		interface.set_plugin_enabled("Wayfarer.Core", true);
 		Log.Wf.Print("Wayfarer.Core enabled", true);
+	pass
+	
+func _disable_ui_core_plugin():
+	var interface = get_editor_interface();
+	
+	if (interface.is_plugin_enabled("Wayfarer.UI")):
+		interface.set_plugin_enabled("Wayfarer.UI", false);
+		Log.Wf.Print("Wayfarer.UI disabled", true);
+	pass
+	
+func _enable_ui_core_plugin():
+	var interface = get_editor_interface();
+	
+	if (!interface.is_plugin_enabled("Wayfarer.UI")):
+		interface.set_plugin_enabled("Wayfarer.UI", true);
+		Log.Wf.Print("Wayfarer.UI enabled", true);
 	pass
 	
 func _disable_pebbles_plugin():
