@@ -13,7 +13,7 @@ namespace Wayfarer.ModuleSystem
         private static Dictionary _settings;
         
         public static Resource Resource => _resource;
-        public static bool? ResetOnReady => GetResetOnReady();
+        public static bool ResetOnReady => GetResetOnReady();
 
         static WayfarerProjectSettings()
         {
@@ -104,18 +104,21 @@ namespace Wayfarer.ModuleSystem
             return _settings.ContainsKey(settingPath);
         }
 
-        private static bool? GetResetOnReady()
+        private static bool GetResetOnReady()
         {
-            bool? value = null;
+            bool value = false;
             
             try
             {
                 value = (bool) _resource.Get("reset_on_ready");
+                return value;
             }
             catch (Exception e)
             {
                 Log.Wf.Error("Tried to get \"reset_on_ready\" from WayfarerProjectSettings but couldn't", e, true);
             }
+            
+            Log.Wf.Error("Couldn't get ResetOnReady from the settings resource", true);
 
             return value;
         }
