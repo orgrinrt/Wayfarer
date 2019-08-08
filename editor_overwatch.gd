@@ -15,6 +15,8 @@ var WayfarerInspector : WayfarerInspector = preload("res://Addons/Wayfarer/Inspe
 func _enter_tree() -> void:
 	var elog : RichTextLabel = get_editor_log_text();
 	elog.text = "";
+	
+	Helpers.instantiate_statics();
 	_remove_resetter();
 	Utils.set_plugin(self);
 	pass
@@ -35,6 +37,7 @@ func _ready() -> void:
 	set_reset_on_ready(false);
 	
 func _exit_tree() -> void:
+	Helpers.dispose_statics();
 	_remove_custom_controls();
 	pass
 
@@ -97,6 +100,7 @@ func disable_plugins() -> Array:
 	_disable_editor_plugin();
 	_disable_ui_core_plugin();
 	_disable_wayfarer_core_plugin();
+	Helpers.dispose_statics();
 	return result;
 	
 func enable_plugins(var state: Array) -> void:
