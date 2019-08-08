@@ -19,7 +19,7 @@ namespace Wayfarer.ModuleSystem
         public Array ModuleDependencies => GetModuleDependencies();
         public Array ModuleDependencyVersions => GetModuleDependencyVersions();
         public ModuleMeta ModuleMeta => GetModuleMeta();
-        public bool? ResetOnReady => WayfarerProjectSettings.ResetOnReady;
+        public bool ResetOnReady => WayfarerProjectSettings.ResetOnReady;
 
         private bool _cachedResetOnReady = true;
 
@@ -27,21 +27,14 @@ namespace Wayfarer.ModuleSystem
         {
             base._EnterTree();
             
-            if (ResetOnReady != null)
-            {
-                _cachedResetOnReady = (bool)ResetOnReady;
-                
-                if ((bool)ResetOnReady) return;
-                
-                Log.Wf.Print("ResetOnReady was false - this must be the OW reset after launch!", true);
-                
-                EnablePlugin();
-                _EnterTreeSafe();
-            }
-            else
-            {
-                throw new NullReferenceException("ResetOnReady was null");
-            }
+            _cachedResetOnReady = ResetOnReady;
+            
+            if (ResetOnReady) return;
+            
+            Log.Wf.Print("ResetOnReady was false - this must be the OW reset after launch!", true);
+            
+            EnablePlugin();
+            _EnterTreeSafe();
         }
 
         public override void _Ready()
