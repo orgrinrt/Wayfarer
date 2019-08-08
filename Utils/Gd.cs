@@ -1,5 +1,8 @@
-﻿using Godot;
+﻿using System;
+using Godot;
+using Wayfarer.ModuleSystem;
 using Wayfarer.Utils.Debug;
+using Wayfarer.Utils.Files;
 using Wayfarer.Utils.Helpers;
 
 namespace Wayfarer.Utils
@@ -19,10 +22,50 @@ namespace Wayfarer.Utils
             Log.Wf.Print(print, gdPrint);
         }
 
-        public void Test()
+        public void InitializeStatics()
         {
-            Log.Print("HAHAHA", true);
+            try
+            {
+                Log.Initialize();
+            }
+            catch (Exception e)
+            {
+                GD.PushError("Couldn't initialize Log");
+                GD.Print(e);
+            }
+
+            try
+            {
+                Directories.Initialize();
+            }
+            catch (Exception e)
+            {
+                GD.PushError("Couldn't initialize Log");
+                GD.Print(e);
+            }
             
+            try
+            {
+                WayfarerProjectSettings.Initialize();
+            }
+            catch (Exception e)
+            {
+                GD.PushError("Couldn't initialize Log");
+                GD.Print(e);
+            }
+        }
+
+        public void DisposeStatics()
+        {
+            try
+            {
+                Log.Dispose();
+            }
+            catch (Exception e)
+            {
+                GD.PushError("Couldn't dispose Log");
+                GD.Print(e);
+            }
         }
 
         public Godot.Collections.Array GetChildrenRecursive(Node node)
