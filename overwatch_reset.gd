@@ -3,13 +3,9 @@ extends Node
 
 var _interface;
 
-var Log = preload("res://Addons/Wayfarer/GDInterfaces/log.gd");
-
-func _ready():
-	pass 
+var Log = preload("res://Addons/Wayfarer/GDInterfaces/log.gd").new();
 
 func _process(delta):
-	
 	if (_interface.is_plugin_enabled("Wayfarer")):
 		_interface.set_plugin_enabled("Wayfarer", false);
 		Log.Wf.Print("Wayfarer (system base) disabled", true);
