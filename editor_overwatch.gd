@@ -3,25 +3,31 @@ tool
 
 var top_right_panel;
 var wayfarer_menu;
+var wayfarer_inspector;
 var original_build_button;
 
-var Log = preload("res://Addons/Wayfarer/GDInterfaces/log.gd");
-var Helpers = preload("res://Addons/Wayfarer/GDInterfaces/helpers.gd");
-var Utils = preload("res://Addons/Wayfarer/file_utils.gd").new();
-var Meta : WayfarerMeta = preload("res://Addons/Wayfarer/Data/meta.tres");
-var Settings : WayfarerSettings = preload("res://wfsettings.tres");
-var WayfarerInspector : WayfarerInspector = preload("res://Addons/Wayfarer/Inspector/inspector.gd").new();
+var Log;
+var Helpers;
+var Utils;
+var Meta : WayfarerMeta;
+var Settings : WayfarerSettings;
 
 func _enter_tree() -> void:
-	var elog : RichTextLabel = get_editor_log_text();
-	elog.text = "";
+	Log = load("res://Addons/Wayfarer/GDInterfaces/log.gd").new();
+	Helpers = load("res://Addons/Wayfarer/GDInterfaces/helpers.gd").new();
+	Utils = load("res://Addons/Wayfarer/file_utils.gd").new();
+	Meta = load("res://Addons/Wayfarer/Data/meta.tres");
+	Settings = load("res://wfsettings.tres");
 	
-	Helpers.instantiate_statics();
-	_remove_resetter();
+	Helpers.initialize_statics();
 	Utils.set_plugin(self);
 	pass
 	
 func _ready() -> void:
+	var elog : RichTextLabel = get_editor_log_text();
+	elog.text = "";
+	
+	_remove_resetter();
 	_add_custom_controls();
 	_update_installed_modules_list();
 	top_right_panel.connect("build_pressed", self, "_on_build_pressed");
@@ -34,11 +40,14 @@ func _ready() -> void:
 		call_deferred("_on_reset_pressed");
 	pass
 	
-	set_reset_on_ready(false);
-	
 func _exit_tree() -> void:
 	Helpers.dispose_statics();
 	_remove_custom_controls();
+	
+	Log.queue_free();
+	Helpers.queue_free();
+	Utils.queue_free();
+	
 	pass
 
 func _add_custom_controls() -> void:
@@ -61,11 +70,12 @@ func _add_custom_controls() -> void:
 		else:
 			Log.Wf.Print("The WayfarerMenu scene was not valid!", true);
 			
-	add_inspector_plugin(WayfarerInspector);
+	wayfarer_inspector = load("res://Addons/Wayfarer/Inspector/inspector.gd").new();
+	add_inspector_plugin(wayfarer_inspector);
 	pass
 
 func _remove_custom_controls() -> void:
-	remove_inspector_plugin(WayfarerInspector);
+	remove_inspector_plugin(wayfarer_inspector);
 	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, top_right_panel);
 	top_right_panel.queue_free();
 	
@@ -87,31 +97,31 @@ func disable_plugins() -> Array:
 	var interface = get_editor_interface();
 	
 	result.append(interface.is_plugin_enabled("Wayfarer.Core"));
-	result.append(interface.is_plugin_enabled("Wayfarer.UI"));
 	result.append(interface.is_plugin_enabled("Wayfarer.Editor"));
 	result.append(interface.is_plugin_enabled("Wayfarer.Editor.Explorer"));
+	result.append(interface.is_plugin_enabled("Wayfarer.UI"));
 	result.append(interface.is_plugin_enabled("Wayfarer.Editor.Taskmaster"));
 	result.append(interface.is_plugin_enabled("Wayfarer.Pebbles"));
 		
 	# NOTE: Reverse order than in enabling - the most important last
 	_disable_pebbles_plugin();
 	_disable_taskmaster_plugin();
+	_disable_ui_core_plugin();
 	_disable_explorer_plugin();
 	_disable_editor_plugin();
-	_disable_ui_core_plugin();
 	_disable_wayfarer_core_plugin();
-	Helpers.dispose_statics();
+	#Helpers.dispose_statics();
 	return result;
 	
 func enable_plugins(var state: Array) -> void:
 	if (state[0]):
 		_enable_wayfarer_core_plugin();
 	if (state[1]):
-		_enable_ui_core_plugin();
-	if (state[2]):
 		_enable_editor_plugin();
-	if (state[3]):
+	if (state[2]):
 		_enable_explorer_plugin();
+	if (state[3]):
+		_enable_ui_core_plugin();
 	if (state[4]):
 		_enable_taskmaster_plugin();
 	if (state[5]):
@@ -237,9 +247,9 @@ func custom_build():
 	var root = get_tree().get_root();
 	var editor_base = root.get_node("EditorNode");
 	var godotsharpeditor = editor_base.get_node("GodotSharpEditor");
-	
+	print("didn't get past _build_solution_pressed");
 	godotsharpeditor.call("_build_solution_pressed");
-	
+	print("got past _build_solution_pressed");
 	#yield(get_tree().create_timer(2.0), "timeout") # we need to be sure that the build process is finished... we need a better way for this
 	#enable_plugins(state);
 	call_deferred("enable_plugins_and_reset_ow", state);
@@ -271,15 +281,17 @@ func _remove_resetter():
 	var resetter = null;
 	
 	for child in children:
-		if (child.name == "Resetter"):
+		if (child.name == "Resetter" || child.name == "Resetter2"):
 			if (is_instance_valid(child)):
 				resetter = child;
-				resetter.queue_free();
+				#resetter.call_deferred("queue_free");
 				
 	if resetter == null:
 		set_reset_on_ready(true);
+		print(" --- Resetter was null, ResetOnReady = true");
 	else:
 		set_reset_on_ready(false);
+		print(" --- Resetter existed, ResetOnReady = false");
 	pass
 	
 func get_original_build_button() -> Button:
