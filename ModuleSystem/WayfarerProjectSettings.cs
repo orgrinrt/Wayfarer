@@ -106,7 +106,7 @@ namespace Wayfarer.ModuleSystem
 
         private static bool GetResetOnReady()
         {
-            bool value = false;
+            bool value = true;
             
             try
             {
