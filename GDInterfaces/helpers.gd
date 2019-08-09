@@ -8,7 +8,7 @@ static func get_children_recursive(var node : Node) -> Array:
 	cs_instance.queue_free();
 	return children;
 	
-static func instantiate_statics() -> void:
+static func initialize_statics() -> void:
 	var cs_bridge = load("res://Addons/Wayfarer/Utils/Gd.cs");
 	var cs_instance = cs_bridge.new();
 	cs_instance.call("InitializeStatics");
