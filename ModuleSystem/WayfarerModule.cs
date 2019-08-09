@@ -25,13 +25,12 @@ namespace Wayfarer.ModuleSystem
 
         public override void _EnterTree()
         {
-            base._EnterTree();
-            
+            #if TOOLS
             _cachedResetOnReady = ResetOnReady;
+            if (_cachedResetOnReady) return;
+            #endif
             
-            if (ResetOnReady) return;
-            
-            Log.Wf.Print("ResetOnReady was false - this must be the OW reset after launch!", true);
+            base._EnterTree();
             
             EnablePlugin();
             _EnterTreeSafe();
@@ -39,9 +38,11 @@ namespace Wayfarer.ModuleSystem
 
         public override void _Ready()
         {
-            base._Ready();
-            
+            #if TOOLS
             if (_cachedResetOnReady) return;
+            #endif    
+            
+            base._Ready();
             
             try
             {
@@ -57,6 +58,10 @@ namespace Wayfarer.ModuleSystem
 
         public override void _ExitTree()
         {
+            #if TOOLS
+            if (_cachedResetOnReady) return;
+            #endif    
+            
             base._ExitTree();
             _ExitTreeSafe();
             DisablePlugin();
@@ -76,20 +81,7 @@ namespace Wayfarer.ModuleSystem
         {
             
         }
-
-        private Dictionary GetWayfarerSettingsDictionary()
-        {
-            // The Key is the settingPath (i.e general/input/xyz)
-            // The value is another Dictionary that contains
-            //     value: <object>
-            //     desc: <string>
-            Resource settingRes = GD.Load("res://wfsettings.tres");
-
-            Dictionary settings = (Dictionary) settingRes.Get("settings");
-
-            return settings;
-        }
-
+        
         private ModuleMeta GetModuleMeta()
         {
             return new ModuleMeta(this);
