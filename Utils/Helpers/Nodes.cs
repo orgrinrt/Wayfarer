@@ -131,8 +131,6 @@ namespace Wayfarer.Utils.Helpers
                 
                 parentCandidate = parentCandidate.GetParent();
             }
-            
-            Log.Error("Couldn't find a parent with type " + typeof(T) + " to node " + node.Name, true);
 
             return null;
         }
