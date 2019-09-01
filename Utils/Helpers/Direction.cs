@@ -17,4 +17,22 @@ namespace Wayfarer.Utils.Helpers
             return (target - origin).Normalized();
         }
     }
+    
+    public enum Direction2D : byte
+    {
+        Left = 1,
+        Right = 2,
+        Up = 4,
+        Down = 8
+    }
+    
+    public enum Direction3D : byte
+    {
+        North = 1,
+        South = 2,
+        West = 4,
+        East = 8,
+        Up = 16,
+        Down = 32
+    }
 }
