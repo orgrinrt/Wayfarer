@@ -80,6 +80,16 @@ namespace Wayfarer.Utils.Helpers
         {
             int r = x % m;
             return r < 0 ? r + m : r;
-        }    
+        }
+
+        public static int RandRangeInt(int min, int max)
+        {
+            return Mathf.Clamp(Mathf.RoundToInt((float)GD.RandRange(min, max)), min, max);
+        }
+        
+        public static int RandRangeInt(float min, float max)
+        {
+            return Mathf.RoundToInt(Mathf.Clamp(Mathf.RoundToInt((float)GD.RandRange(min, max)), min, max));
+        }
     }
 }
