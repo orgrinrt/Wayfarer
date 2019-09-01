@@ -82,6 +82,7 @@
     <Compile Include="Utils\Helpers\Bytes.cs" />
     <Compile Include="Utils\Helpers\Colors.cs" />
     <Compile Include="Utils\Helpers\Direction.cs" />
+    <Compile Include="Utils\Helpers\Gradients.cs" />
     <Compile Include="Utils\Helpers\Math.cs" />
     <Compile Include="Utils\Helpers\Nodes.cs" />
     <Compile Include="Utils\Helpers\Sqlite.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Utils\Localization\Lang.cs" />
     <Compile Include="Utils\Physics\CollisionGroup.cs" />
     <Compile Include="Utils\Physics\CollisionLayer.cs" />
+    <Compile Include="Utils\Threading\ThreadedProcess.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="plugin.cfg" />
