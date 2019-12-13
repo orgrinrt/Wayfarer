@@ -39,7 +39,7 @@ namespace Wayfarer.ModuleSystem
 
         public static object Get(string settingPath)
         {
-            if (_settings.ContainsKey(settingPath))
+            if (_settings.Contains(settingPath))
             {
                 Dictionary presentValue = (Dictionary)_settings[settingPath];
 
@@ -58,7 +58,7 @@ namespace Wayfarer.ModuleSystem
         
         public static void Add(string settingPath, object value, string desc = "")
         {
-            if (!_settings.ContainsKey(settingPath))
+            if (!_settings.Contains(settingPath))
             {
                 Dictionary settingValues = new Dictionary {{"value", value}, {"desc", desc}};
 
@@ -68,7 +68,7 @@ namespace Wayfarer.ModuleSystem
         
         public static void AddOrUpdate(string settingPath, object value, string desc = "")
         {
-            if (_settings.ContainsKey(settingPath))
+            if (_settings.Contains(settingPath))
             {
                 Dictionary presentValue = (Dictionary)_settings[settingPath];
 
@@ -101,7 +101,7 @@ namespace Wayfarer.ModuleSystem
 
         public static bool Contains(string settingPath)
         {
-            return _settings.ContainsKey(settingPath);
+            return _settings.Contains(settingPath);
         }
 
         private static bool GetResetOnReady()

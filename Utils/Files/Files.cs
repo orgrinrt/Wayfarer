@@ -80,7 +80,7 @@ namespace Wayfarer.Utils.Files
             if (_gdFileUtils != null && Object.IsInstanceValid(_gdFileUtils)) return _gdFileUtils;
             
             GDScript script = GD.Load<GDScript>("res://Addons/Wayfarer/file_utils.gd");
-            _gdFileUtils = script.New();
+            _gdFileUtils = (Object)script.New();
 
             if (_gdFileUtils == null)
             {
